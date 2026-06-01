@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HealthPredict — Patient Health Prediction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#0EA5E9"/>
+          <path d="M16 7v18M7 16h18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="5" stroke="white" stroke-width="1.5" fill="none"/>
+        </svg>
+        <span class="logo-text">HealthPredict</span>
+      </div>
+      <div class="header-stats" id="headerStats">
+        <span class="stat-pill"><span id="totalCount">0</span> patients</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main class="main-layout">
+
+    <!-- Left panel: Form -->
+    <aside class="form-panel" id="formPanel">
+      <div class="panel-header">
+        <h2 class="panel-title" id="formTitle">New Patient</h2>
+        <button class="btn-icon" id="cancelBtn" onclick="cancelForm()" title="Cancel" style="display:none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="patientForm" novalidate>
+        <input type="hidden" id="patientId" />
+
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="e.g. Priya Sharma" autocomplete="name" />
+          <span class="field-error" id="err-fullName"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" max="" />
+            <span class="field-error" id="err-dateOfBirth"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="name@example.com" autocomplete="email"/>
+            <span class="field-error" id="err-email"></span>
+          </div>
+        </div>
+
+        <div class="section-divider">
+          <span>Blood Test Values</span>
+        </div>
+
+        <div class="form-row three-col">
+          <div class="form-group">
+            <label for="glucose">
+              Glucose
+              <span class="unit-badge">mg/dL</span>
+            </label>
+            <input type="number" id="glucose" placeholder="e.g. 95" step="0.1" min="0" max="600"/>
+            <span class="range-hint">Normal: 70–99</span>
+            <span class="field-error" id="err-glucose"></span>
+          </div>
+          <div class="form-group">
+            <label for="haemoglobin">
+              Haemoglobin
+              <span class="unit-badge">g/dL</span>
+            </label>
+            <input type="number" id="haemoglobin" placeholder="e.g. 14.5" step="0.1" min="0" max="25"/>
+            <span class="range-hint">Normal: 12–17.5</span>
+            <span class="field-error" id="err-haemoglobin"></span>
+          </div>
+          <div class="form-group">
+            <label for="cholesterol">
+              Cholesterol
+              <span class="unit-badge">mg/dL</span>
+            </label>
+            <input type="number" id="cholesterol" placeholder="e.g. 185" step="0.1" min="0" max="700"/>
+            <span class="range-hint">Desirable: &lt;200</span>
+            <span class="field-error" id="err-cholesterol"></span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" id="submitBtn">
+            <span class="btn-label">Save &amp; Predict</span>
+            <span class="btn-spinner" id="submitSpinner" style="display:none">
+              <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </span>
+          </button>
+        </div>
+      </form>
+    </aside>
+
+    <!-- Right panel: Table -->
+    <section class="table-panel">
+      <div class="table-toolbar">
+        <div class="search-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search patients…" oninput="filterTable()" />
+        </div>
+        <button class="btn-outline" onclick="exportCSV()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+      </div>
+
+      <div class="table-wrap" id="tableWrap">
+        <table class="data-table" id="patientsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>DOB</th>
+              <th>Email</th>
+              <th class="center">Glucose</th>
+              <th class="center">Hgb</th>
+              <th class="center">Chol</th>
+              <th>AI Remarks</th>
+              <th class="center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+        <div class="empty-state" id="emptyState">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <p>No patients yet. Use the form to add a record.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Remarks modal -->
+  <div class="modal-overlay" id="remarksModal" onclick="closeRemarks(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>AI Health Prediction</h3>
+        <button class="btn-icon" onclick="closeRemarks()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-patient-name" id="modalPatientName"></p>
+        <div class="remarks-box" id="modalRemarks"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div class="modal-overlay" id="deleteModal" onclick="closeDelete(event)">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-header">
+        <h3>Delete Patient</h3>
+        <button class="btn-icon" onclick="closeDelete()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="deletePatientName"></strong>? This cannot be undone.</p>
+        <div class="modal-actions">
+          <button class="btn-outline" onclick="closeDelete()">Cancel</button>
+          <button class="btn-danger" id="confirmDeleteBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
