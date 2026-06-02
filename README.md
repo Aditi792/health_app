@@ -6,14 +6,14 @@ A full-stack web application for managing patient blood test records with AI-pow
 
 - **Backend**: Python 3.11, Flask, SQLAlchemy (SQLite)
 - **Frontend**: Vanilla HTML/CSS/JavaScript (no framework dependencies)
-- **AI/ML**: Anthropic Claude API (falls back to rule-based engine if no key)
+- **AI/ML**: Gemini API (falls back to rule-based engine if no key)
 - **Database**: SQLite (via SQLAlchemy ORM)
 
 ## Features
 
 - Full CRUD for patient records
 - Blood test input: Glucose, Haemoglobin, Cholesterol
-- AI-generated health remarks via Anthropic Claude (claude-haiku)
+- AI-generated health remarks via GEMINI API (gemini-2.0-flash)
 - Rule-based fallback predictor (no API key required for demo)
 - Colour-coded value badges (normal / borderline / high)
 - Live search, CSV export
@@ -34,8 +34,8 @@ source venv/bin/activate   # Windows: venv\Scripts\activate
 # 3. Install dependencies
 pip install -r backend/requirements.txt
 
-# 4. Set your Anthropic API key (optional — app works without it)
-export ANTHROPIC_API_KEY=your_key_here   # Windows: set ANTHROPIC_API_KEY=your_key_here
+# 4. Set your GEMINI API key (optional — app works without it)
+export GEMINI_API_KEY=your_key_here   # Windows: set GEMINI_API_KEY=your_key_here
 
 # 5. Run the application
 python backend/app.py
@@ -73,7 +73,7 @@ health-predict/
 
 ## AI Prediction Logic
 
-1. **With ANTHROPIC_API_KEY set**: sends patient vitals to `claude-haiku-4-5` with a medical prompt and returns a concise 2–3 sentence health risk assessment.
+1. **With GEMINI_API_KEY set**: sends patient vitals to `claude-haiku-4-5` with a medical prompt and returns a concise 2–3 sentence health risk assessment.
 2. **Without API key**: falls back to a deterministic rule-based engine that classifies each blood value against standard clinical reference ranges and produces a structured remarks string.
 
 ## Normal Reference Ranges Used
