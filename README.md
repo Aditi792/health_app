@@ -73,7 +73,7 @@ health-predict/
 
 ## AI Prediction Logic
 
-1. **With GEMINI_API_KEY set**: sends patient vitals to `claude-haiku-4-5` with a medical prompt and returns a concise 2–3 sentence health risk assessment.
+1. **With GEMINI_API_KEY set**: sends patient vitals to `gemini-2.0-flash` with a medical prompt and returns a concise 2–3 sentence health risk assessment.
 2. **Without API key**: falls back to a deterministic rule-based engine that classifies each blood value against standard clinical reference ranges and produces a structured remarks string.
 
 ## Normal Reference Ranges Used
