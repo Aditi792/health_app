@@ -95,7 +95,7 @@ html, body {
 
 /* ── Form Elements ── */
 .form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .form-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
 
 label {
