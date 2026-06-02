@@ -24,8 +24,8 @@ A full-stack web application for managing patient blood test records with AI-pow
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/health-predict.git
-cd health-predict
+git clone https://github.com/Aditi792/health_app.git
+cd health_app
 
 # 2. Create and activate virtual environment
 python -m venv venv
@@ -46,7 +46,7 @@ Then open **http://localhost:5000** in your browser.
 ## Project Structure
 
 ```
-health-predict/
+health_app/
 ├── backend/
 │   ├── app.py              # Flask app, API routes, DB models, AI integration
 │   ├── requirements.txt
